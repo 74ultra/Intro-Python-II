@@ -9,3 +9,12 @@ class Player():
 
     def __str__(self):
         return f'{self.name}: {self.current_room}'
+
+    def player_inv(self):
+        if len(self.inventory) == 0:
+            return 'You are not carrying any items'
+        else:
+            invent = f'{self.name}, you are carrying the following items: '
+            for i in self.inventory:
+                invent += f'\n {i}'
+            return invent
