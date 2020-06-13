@@ -11,6 +11,12 @@ class Room():
     # def __str__(self):
     #     return f'{self.name}: {self.description}'
 
+    def make_inv(self):
+        y = []
+        for x in self.inventory:
+            y.append(x.name)
+        return y
+
     def room_inv(self):
         if len(self.inventory) == 0:
             return "There are no items you can carry with you in this room\n"

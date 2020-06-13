@@ -1,17 +1,19 @@
 import sys
 from room import Room
 from player import Player
+from item import rake, knife, hammer, book, flashlight, rat
 
 # Rooms
 
-outside = Room("Outside Cave Entrance", "North of you, the cave mouth beckons", [
-               'candle', 'rock', 'shovel'])
+outside = Room("Outside Cave Entrance",
+               "North of you, the cave mouth beckons", [rake])
 foyer = Room(
-    "Foyer", "Dim light filters in from the south. Dusty passages run north and east.")
+    "Foyer", "Dim light filters in from the south. Dusty passages run north and east.", [knife, hammer])
 overlook = Room("Grand Overlook", "A steep cliff appears before you, falling into the darkness. Ahead to the north, a light flickers in the distance, but there is no way across the chasm.")
 narrow = Room("Narrow Passage",
-              "The narrow passage bends here from west to north. The smell of gold permeates the air.")
-treasure = Room("Treasure Chamber", "You've found the long-lost treasure chamber! Sadly, it has already been completely emptied by earlier adventurers. The only exit is to the south.")
+              "The narrow passage bends here from west to north. The smell of gold permeates the air.", [rat])
+treasure = Room("Treasure Chamber",
+                "You've found the long-lost treasure chamber! Sadly, it has already been completely emptied by earlier adventurers. The only exit is to the south.", [book, flashlight])
 
 # Link rooms together
 
@@ -27,7 +29,7 @@ treasure.s_to = narrow
 #
 # Main
 #
-command_list = '*********\nCommands:\nn --> move north\ns --> move south\ne --> move east\nw --> move west\nget [item name] --> add item to your inventory\ndrop [item name] --> remove item from your inventory\nh --> display the command list again\nq --> quit the game\n*********'
+command_list = '*********\nCommands:\nn --> move north\ns --> move south\ne --> move east\nw --> move west\nl --> look around the room to search for items\ni --> show list of items carried\nget [item name] --> add item to your inventory\ntake [item name] --> add item to your inventory\ndrop [item name] --> remove item from your inventory\nh --> display the command list again\nq --> quit the game\n*********'
 
 player_name = input(
     "Welcome to whatever this game is. Please enter your name: ")
@@ -37,7 +39,7 @@ print(command_list)
 
 while True:
     try:
-        print(player.current_room.desc(), '\n', player.current_room.room_inv())
+        print(player.current_room.desc())
         action = input('Please enter a command: ')
         cmd_list = action.split(' ')
         if action.lower() == 'q':
@@ -45,7 +47,7 @@ while True:
             break
         if len(cmd_list) == 1:
             if action == 'n':
-                print(action)
+                print(hasattr(player.current_room, 'n_to'))
                 player.current_room = player.current_room.n_to
             elif action == 's':
                 print(action)
@@ -61,11 +63,32 @@ while True:
 
             elif action == 'h':
                 print(command_list)
+            elif action == 'l':
+                print(player.current_room.room_inv())
+            elif action == 'i':
+                print(player.player_inv())
             else:
                 print('That is not a valid command\n')
                 continue
         elif len(cmd_list) == 2:
-            print('Hello')
+            if cmd_list[0] == 'get' or cmd_list[0] == 'take':
+                if player.current_room.inventory:
+                    for item in player.current_room.inventory:
+                        if cmd_list[1] == item.name:
+                            player.current_room.inventory.remove(item)
+                            player.inventory.append(item)
+
+                else:
+                    print("There is nothing here you can take with you")
+            elif cmd_list[0] == 'drop':
+                if player.inventory:
+                    for item in player.inventory:
+                        if cmd_list[1] == item.name:
+                            player.inventory.remove(item)
+                            player.current_room.inventory.append(item)
+
+                else:
+                    print("You don't have anything to drop.")
     except AttributeError as err:
         print("\nThere is no room in that direction")
 

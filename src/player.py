@@ -16,5 +16,5 @@ class Player():
         else:
             invent = f'{self.name}, you are carrying the following items: '
             for i in self.inventory:
-                invent += f'\n {i}'
+                invent += f'\n {i.name}: {i.description}'
             return invent
