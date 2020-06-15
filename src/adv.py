@@ -46,44 +46,44 @@ while True:
             print(f'Thank you for playing, {player_name}')
             break
         if len(cmd_list) == 1:
-            if action == 'n':
-                print(hasattr(player.current_room, 'n_to'))
+            if action.lower() == 'n':
+                print(action)
                 player.current_room = player.current_room.n_to
-            elif action == 's':
+            elif action.lower() == 's':
                 print(action)
                 player.current_room = player.current_room.s_to
                 # continue
-            elif action == 'e':
+            elif action.lower() == 'e':
                 print(action)
                 player.current_room = player.current_room.e_to
 
-            elif action == 'w':
+            elif action.lower() == 'w':
                 print(action)
                 player.current_room = player.current_room.w_to
 
-            elif action == 'h':
+            elif action.lower() == 'h':
                 print(command_list)
-            elif action == 'l':
+            elif action.lower() == 'l':
                 print(player.current_room.room_inv())
-            elif action == 'i':
+            elif action.lower() == 'i':
                 print(player.player_inv())
             else:
                 print('That is not a valid command\n')
                 continue
         elif len(cmd_list) == 2:
-            if cmd_list[0] == 'get' or cmd_list[0] == 'take':
+            if cmd_list[0].lower() == 'get' or cmd_list[0].lower() == 'take':
                 if player.current_room.inventory:
                     for item in player.current_room.inventory:
-                        if cmd_list[1] == item.name:
+                        if cmd_list[1].lower() == item.name:
                             player.current_room.inventory.remove(item)
                             player.inventory.append(item)
 
                 else:
                     print("There is nothing here you can take with you")
-            elif cmd_list[0] == 'drop':
+            elif cmd_list[0].lower() == 'drop':
                 if player.inventory:
                     for item in player.inventory:
-                        if cmd_list[1] == item.name:
+                        if cmd_list[1].lower() == item.name:
                             player.inventory.remove(item)
                             player.current_room.inventory.append(item)
 
